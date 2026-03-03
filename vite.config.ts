@@ -170,7 +170,7 @@ function polymarketPlugin(): Plugin {
 function sebufApiPlugin(): Plugin {
   // Cache router across requests (H-13 fix). Invalidated by Vite's module graph on HMR.
   let cachedRouter: Awaited<ReturnType<typeof buildRouter>> | null = null;
-  let cachedCorsMod: any = null;
+  let cachedCorsMod: typeof import('./server/cors') | null = null;
 
   async function buildRouter() {
     const [
@@ -196,50 +196,50 @@ function sebufApiPlugin(): Plugin {
       givingServerMod, givingHandlerMod,
       tradeServerMod, tradeHandlerMod,
     ] = await Promise.all([
-        import('./server/router'),
-        import('./server/cors'),
-        import('./server/error-mapper'),
-        import('./src/generated/server/worldmonitor/seismology/v1/service_server'),
-        import('./server/worldmonitor/seismology/v1/handler'),
-        import('./src/generated/server/worldmonitor/wildfire/v1/service_server'),
-        import('./server/worldmonitor/wildfire/v1/handler'),
-        import('./src/generated/server/worldmonitor/climate/v1/service_server'),
-        import('./server/worldmonitor/climate/v1/handler'),
-        import('./src/generated/server/worldmonitor/prediction/v1/service_server'),
-        import('./server/worldmonitor/prediction/v1/handler'),
-        import('./src/generated/server/worldmonitor/displacement/v1/service_server'),
-        import('./server/worldmonitor/displacement/v1/handler'),
-        import('./src/generated/server/worldmonitor/aviation/v1/service_server'),
-        import('./server/worldmonitor/aviation/v1/handler'),
-        import('./src/generated/server/worldmonitor/research/v1/service_server'),
-        import('./server/worldmonitor/research/v1/handler'),
-        import('./src/generated/server/worldmonitor/unrest/v1/service_server'),
-        import('./server/worldmonitor/unrest/v1/handler'),
-        import('./src/generated/server/worldmonitor/conflict/v1/service_server'),
-        import('./server/worldmonitor/conflict/v1/handler'),
-        import('./src/generated/server/worldmonitor/maritime/v1/service_server'),
-        import('./server/worldmonitor/maritime/v1/handler'),
-        import('./src/generated/server/worldmonitor/cyber/v1/service_server'),
-        import('./server/worldmonitor/cyber/v1/handler'),
-        import('./src/generated/server/worldmonitor/economic/v1/service_server'),
-        import('./server/worldmonitor/economic/v1/handler'),
-        import('./src/generated/server/worldmonitor/infrastructure/v1/service_server'),
-        import('./server/worldmonitor/infrastructure/v1/handler'),
-        import('./src/generated/server/worldmonitor/market/v1/service_server'),
-        import('./server/worldmonitor/market/v1/handler'),
-        import('./src/generated/server/worldmonitor/news/v1/service_server'),
-        import('./server/worldmonitor/news/v1/handler'),
-        import('./src/generated/server/worldmonitor/intelligence/v1/service_server'),
-        import('./server/worldmonitor/intelligence/v1/handler'),
-        import('./src/generated/server/worldmonitor/military/v1/service_server'),
-        import('./server/worldmonitor/military/v1/handler'),
-        import('./src/generated/server/worldmonitor/positive_events/v1/service_server'),
-        import('./server/worldmonitor/positive-events/v1/handler'),
-        import('./src/generated/server/worldmonitor/giving/v1/service_server'),
-        import('./server/worldmonitor/giving/v1/handler'),
-        import('./src/generated/server/worldmonitor/trade/v1/service_server'),
-        import('./server/worldmonitor/trade/v1/handler'),
-      ]);
+      import('./server/router'),
+      import('./server/cors'),
+      import('./server/error-mapper'),
+      import('./src/generated/server/worldmonitor/seismology/v1/service_server'),
+      import('./server/worldmonitor/seismology/v1/handler'),
+      import('./src/generated/server/worldmonitor/wildfire/v1/service_server'),
+      import('./server/worldmonitor/wildfire/v1/handler'),
+      import('./src/generated/server/worldmonitor/climate/v1/service_server'),
+      import('./server/worldmonitor/climate/v1/handler'),
+      import('./src/generated/server/worldmonitor/prediction/v1/service_server'),
+      import('./server/worldmonitor/prediction/v1/handler'),
+      import('./src/generated/server/worldmonitor/displacement/v1/service_server'),
+      import('./server/worldmonitor/displacement/v1/handler'),
+      import('./src/generated/server/worldmonitor/aviation/v1/service_server'),
+      import('./server/worldmonitor/aviation/v1/handler'),
+      import('./src/generated/server/worldmonitor/research/v1/service_server'),
+      import('./server/worldmonitor/research/v1/handler'),
+      import('./src/generated/server/worldmonitor/unrest/v1/service_server'),
+      import('./server/worldmonitor/unrest/v1/handler'),
+      import('./src/generated/server/worldmonitor/conflict/v1/service_server'),
+      import('./server/worldmonitor/conflict/v1/handler'),
+      import('./src/generated/server/worldmonitor/maritime/v1/service_server'),
+      import('./server/worldmonitor/maritime/v1/handler'),
+      import('./src/generated/server/worldmonitor/cyber/v1/service_server'),
+      import('./server/worldmonitor/cyber/v1/handler'),
+      import('./src/generated/server/worldmonitor/economic/v1/service_server'),
+      import('./server/worldmonitor/economic/v1/handler'),
+      import('./src/generated/server/worldmonitor/infrastructure/v1/service_server'),
+      import('./server/worldmonitor/infrastructure/v1/handler'),
+      import('./src/generated/server/worldmonitor/market/v1/service_server'),
+      import('./server/worldmonitor/market/v1/handler'),
+      import('./src/generated/server/worldmonitor/news/v1/service_server'),
+      import('./server/worldmonitor/news/v1/handler'),
+      import('./src/generated/server/worldmonitor/intelligence/v1/service_server'),
+      import('./server/worldmonitor/intelligence/v1/handler'),
+      import('./src/generated/server/worldmonitor/military/v1/service_server'),
+      import('./server/worldmonitor/military/v1/handler'),
+      import('./src/generated/server/worldmonitor/positive_events/v1/service_server'),
+      import('./server/worldmonitor/positive-events/v1/handler'),
+      import('./src/generated/server/worldmonitor/giving/v1/service_server'),
+      import('./server/worldmonitor/giving/v1/handler'),
+      import('./src/generated/server/worldmonitor/trade/v1/service_server'),
+      import('./server/worldmonitor/trade/v1/handler'),
+    ]);
 
     const serverOptions = { onError: errorMod.mapErrorToResponse };
     const allRoutes = [
@@ -291,6 +291,7 @@ function sebufApiPlugin(): Plugin {
           }
           const router = cachedRouter;
           const corsMod = cachedCorsMod;
+          if (!corsMod) throw new Error('[sebuf-api] CORS module not loaded');
 
           // Convert Connect IncomingMessage to Web Standard Request
           const port = server.config.server.port || 3000;
