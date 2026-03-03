@@ -12,14 +12,20 @@ RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
+# Verify the dist was produced
+RUN ls -la dist/
+
 # ── Runtime stage ────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-# Only ship the compiled frontend + the standalone server (no node_modules needed)
+# Copy the compiled frontend and the standalone server
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/railway-server.mjs ./railway-server.mjs
+
+# Verify files are present
+RUN ls -la && ls -la dist/ | head -5
 
 ENV PORT=3000
 EXPOSE 3000
