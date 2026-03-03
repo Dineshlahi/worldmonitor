@@ -12,8 +12,6 @@ const PRODUCTION_PATTERNS: RegExp[] = [
   /^https?:\/\/[a-z0-9-]+\.tauri\.localhost(:\d+)?$/i,
   /^tauri:\/\/localhost$/,
   /^asset:\/\/localhost$/,
-  // Railway deployments
-  /^https:\/\/[a-z0-9-]+\.up\.railway\.app$/,
 ];
 
 const DEV_PATTERNS: RegExp[] = [
