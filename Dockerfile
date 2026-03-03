@@ -18,7 +18,8 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/railway-server.mjs ./railway-server.mjs
 
-# Do NOT set ENV PORT — Railway injects $PORT automatically.
-# Do NOT hardcode EXPOSE — Railway reads $PORT for routing.
+# Railway injects PORT=8080 at runtime — match it with EXPOSE so Railway
+# knows where to route external traffic.
+EXPOSE 8080
 
 CMD ["node", "railway-server.mjs"]
