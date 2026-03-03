@@ -1327,7 +1327,7 @@
         "flow": "กระแส",
         "regime": "สภาพตลาด",
         "btcTrend": "แนวโน้ม BTC",
-        "hashRate": "Hash Rate",
+        "hashRate": "Mining Power",
         "fearGreed": "ความกลัวและความโลภ",
         "momentum": "Momentum"
       }

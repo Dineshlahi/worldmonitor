@@ -1371,7 +1371,7 @@
         "flow": "Flusso",
         "regime": "Regime",
         "btcTrend": "BTC Trend",
-        "hashRate": "Hash Rate",
+        "hashRate": "Mining Power",
         "fearGreed": "Fear &amp; Greed",
         "momentum": "Momentum"
       }

@@ -1224,7 +1224,7 @@
         "flow": "Поток",
         "regime": "Режим",
         "btcTrend": "Тренд BTC",
-        "hashRate": "Hash Rate",
+        "hashRate": "Mining Power",
         "fearGreed": "Страх &amp; Жадность",
         "momentum": "Momentum"
       }
