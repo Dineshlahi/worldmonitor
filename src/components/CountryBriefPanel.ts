@@ -83,6 +83,7 @@ export interface CountryBriefPanel {
   updateMarkets(markets: PredictionMarket[]): void;
   updateStock(data: StockIndexData): void;
   updateInfrastructure(code: string): void;
+  updateScore?(score: CountryScore | null, signals: CountryBriefSignals): void;
   updateSignalDetails?(details: CountryDeepDiveSignalDetails): void;
   updateMilitaryActivity?(summary: CountryDeepDiveMilitarySummary): void;
   updateEconomicIndicators?(indicators: CountryDeepDiveEconomicIndicator[]): void;

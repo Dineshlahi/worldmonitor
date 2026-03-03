@@ -17,8 +17,15 @@ export const VARIANT_FEEDS: Record<string, Record<string, ServerFeed[]>> = {
       { name: 'CNN World', url: gn('site:cnn.com world news when:1d') },
     ],
     us: [
+      { name: 'Reuters US', url: gn('site:reuters.com US') },
       { name: 'NPR News', url: 'https://feeds.npr.org/1001/rss.xml' },
-      { name: 'Politico', url: gn('site:politico.com when:1d') },
+      { name: 'PBS NewsHour', url: 'https://www.pbs.org/newshour/feeds/rss/headlines' },
+      { name: 'ABC News', url: 'https://feeds.abcnews.com/abcnews/topstories' },
+      { name: 'CBS News', url: 'https://www.cbsnews.com/latest/rss/main' },
+      { name: 'NBC News', url: 'https://feeds.nbcnews.com/nbcnews/public/news' },
+      { name: 'Wall Street Journal', url: 'https://feeds.content.dowjones.io/public/rss/RSSUSnews' },
+      { name: 'Politico', url: 'https://rss.politico.com/politics-news.xml' },
+      { name: 'The Hill', url: 'https://thehill.com/news/feed' },
       { name: 'Axios', url: 'https://api.axios.com/feed/' },
     ],
     europe: [
@@ -69,6 +76,9 @@ export const VARIANT_FEEDS: Record<string, Record<string, ServerFeed[]>> = {
     latam: [
       { name: 'BBC Latin America', url: 'https://feeds.bbci.co.uk/news/world/latin_america/rss.xml' },
       { name: 'Guardian Americas', url: 'https://www.theguardian.com/world/americas/rss' },
+      { name: 'Primicias', url: 'https://www.primicias.ec/feed/', lang: 'es' },
+      { name: 'Infobae Americas', url: 'https://www.infobae.com/feeds/rss/', lang: 'es' },
+      { name: 'El Universo', url: 'https://www.eluniverso.com/arc/outboundfeeds/rss/category/noticias/?outputType=xml', lang: 'es' },
     ],
     asia: [
       { name: 'BBC Asia', url: 'https://feeds.bbci.co.uk/news/world/asia/rss.xml' },

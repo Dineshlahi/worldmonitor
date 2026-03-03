@@ -43,7 +43,18 @@ function getFredBreaker(seriesId: string) {
   }
   return fredBreakers.get(seriesId)!;
 }
-const wbBreaker = createCircuitBreaker<ListWorldBankIndicatorsResponse>({ name: 'World Bank', cacheTtlMs: 30 * 60 * 1000, persistCache: true });
+const wbBreakers = new Map<string, ReturnType<typeof createCircuitBreaker<ListWorldBankIndicatorsResponse>>>();
+
+function getWbBreaker(indicatorCode: string) {
+  if (!wbBreakers.has(indicatorCode)) {
+    wbBreakers.set(indicatorCode, createCircuitBreaker<ListWorldBankIndicatorsResponse>({
+      name: `WB:${indicatorCode}`,
+      cacheTtlMs: 30 * 60 * 1000,
+      persistCache: true,
+    }));
+  }
+  return wbBreakers.get(indicatorCode)!;
+}
 const eiaBreaker = createCircuitBreaker<GetEnergyPricesResponse>({ name: 'EIA Energy', cacheTtlMs: 15 * 60 * 1000, persistCache: true });
 const capacityBreaker = createCircuitBreaker<GetEnergyCapacityResponse>({ name: 'EIA Capacity', cacheTtlMs: 30 * 60 * 1000, persistCache: true });
 
@@ -429,7 +440,7 @@ export async function getIndicatorData(
 ): Promise<WorldBankResponse> {
   const { countries, years = 5 } = options;
 
-  const resp = await wbBreaker.execute(async () => {
+  const resp = await getWbBreaker(indicator).execute(async () => {
     return client.listWorldBankIndicators({
       indicatorCode: indicator,
       countryCode: countries?.join(';') || '',
@@ -480,6 +491,10 @@ export interface TechReadinessScore {
 export async function getTechReadinessRankings(
   countries?: string[],
 ): Promise<TechReadinessScore[]> {
+  // Fast path: bootstrap-hydrated data available on first page load
+  const hydrated = getHydratedData('techReadiness') as TechReadinessScore[] | undefined;
+  if (hydrated?.length && !countries) return hydrated;
+
   const [internet, mobile, broadband, rdSpend] = await Promise.all([
     getIndicatorData('IT.NET.USER.ZS', { countries, years: 5 }),
     getIndicatorData('IT.CEL.SETS.P2', { countries, years: 5 }),

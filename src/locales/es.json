@@ -933,7 +933,12 @@
     "playback": {
       "toggleMode": "Alternar modo de reproducción",
       "historicalPlayback": "Reproducción histórica",
-      "live": "EN VIVO"
+      "live": "EN VIVO",
+      "close": "Cerca",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "stablecoins": {
       "pegHealth": "Salud del anclaje",

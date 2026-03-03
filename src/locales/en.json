@@ -20,7 +20,7 @@
     "briefUnavailable": "AI brief unavailable — configure GROQ_API_KEY in Settings.",
     "cached": "Cached",
     "fresh": "Fresh",
-    "noMarkets": "No prediction markets found",
+    "noMarkets": "No active markets for this country.",
     "loadingIndex": "Loading index...",
     "components": {
       "unrest": "Unrest",
@@ -761,7 +761,12 @@
     "playback": {
       "toggleMode": "Toggle Playback Mode",
       "live": "LIVE",
-      "historicalPlayback": "Historical Playback"
+      "historicalPlayback": "Historical Playback",
+      "close": "Close",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Pentagon Pizza Index",

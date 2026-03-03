@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "Basculer le mode lecture",
       "live": "EN DIRECT",
-      "historicalPlayback": "Lecture historique"
+      "historicalPlayback": "Lecture historique",
+      "close": "Fermer",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Index des pizzas du Pentagone",

@@ -59,6 +59,7 @@ export interface EventHandlerCallbacks {
   waitForAisData: () => void;
   syncDataFreshnessWithLayers: () => void;
   ensureCorrectZones: () => void;
+  refreshOpenCountryBrief?: () => void;
 }
 
 export class EventHandlerManager implements AppModule {
@@ -271,6 +272,7 @@ export class EventHandlerManager implements AppModule {
 
     window.addEventListener('focal-points-ready', () => {
       (this.ctx.panels['cii'] as CIIPanel)?.refresh(true);
+      this.callbacks.refreshOpenCountryBrief?.();
     });
 
     window.addEventListener('theme-changed', () => {
@@ -738,7 +740,7 @@ export class EventHandlerManager implements AppModule {
     const mapSection = document.getElementById('mapSection');
     const mapContainer = document.getElementById('mapContainer');
     const resizeHandle = document.getElementById('mapResizeHandle');
-    if (!mapSection || !mapContainer || !resizeHandle) return;
+    if (!mapSection || !resizeHandle || !mapContainer) return;
 
     const getMinHeight = () => (window.innerWidth >= 1600 ? 280 : 350);
     const getMaxHeight = () => {
@@ -746,14 +748,12 @@ export class EventHandlerManager implements AppModule {
 
       const bottomGrid = document.getElementById('mapBottomGrid');
       const isEmpty = !bottomGrid || bottomGrid.children.length === 0;
-      const headerHeight = 60; // Approximate header height
+      const headerHeight = 60;
       const totalAvailable = window.innerHeight - headerHeight;
 
       if (isEmpty) {
-        // Allow map to take almost all space if bottom is empty, but leave 25px for handle
         return totalAvailable - 25;
       } else {
-        // Guarantee at least 300px for the bottom area
         return totalAvailable - 300;
       }
     };
@@ -763,8 +763,12 @@ export class EventHandlerManager implements AppModule {
       const numeric = Number.parseInt(savedHeight, 10);
       if (Number.isFinite(numeric)) {
         const clamped = Math.max(getMinHeight(), Math.min(numeric, getMaxHeight()));
-        mapContainer.style.height = `${clamped}px`;
-        mapContainer.style.flex = 'none'; // Lock height
+        if (window.innerWidth >= 1600) {
+          mapContainer.style.flex = 'none';
+          mapContainer.style.height = `${clamped}px`;
+        } else {
+          mapSection.style.height = `${clamped}px`;
+        }
         if (clamped !== numeric) {
           localStorage.setItem('map-height', `${clamped}px`);
         }
@@ -777,54 +781,72 @@ export class EventHandlerManager implements AppModule {
     let startY = 0;
     let startHeight = 0;
 
+    const getTarget = () => (window.innerWidth >= 1600 ? mapContainer : mapSection);
+
     const endResize = () => {
       if (!isResizing) return;
       isResizing = false;
       this.ctx.map?.setIsResizing(false);
-      this.ctx.map?.render();
+      this.ctx.map?.resize(); // Final pass to sync canvas size post-drag
       mapSection.classList.remove('resizing');
       document.body.style.cursor = '';
-      localStorage.setItem('map-height', mapContainer.style.height);
+      localStorage.setItem('map-height', getTarget().style.height);
     };
 
     resizeHandle.addEventListener('mousedown', (e) => {
       isResizing = true;
       startY = e.clientY;
-      startHeight = mapContainer.offsetHeight;
+      const target = getTarget();
+      startHeight = target.offsetHeight;
       this.ctx.map?.setIsResizing(true);
       mapSection.classList.add('resizing');
-      mapContainer.style.flex = 'none'; // Ensure manual resize locks it
       document.body.style.cursor = 'ns-resize';
       e.preventDefault();
     });
 
     resizeHandle.addEventListener('dblclick', () => {
+      const isWide = window.innerWidth >= 1600;
+      const target = isWide ? mapContainer : mapSection;
+
       const targetHeight = window.innerHeight * 0.5;
       const finalHeight = Math.max(getMinHeight(), Math.min(targetHeight, getMaxHeight()));
 
       this.ctx.map?.setIsResizing(true);
-      mapContainer.classList.add('map-container-smooth');
-      mapContainer.style.height = `${finalHeight}px`;
-      mapContainer.style.flex = 'none';
+      target.classList.add('map-section-smooth');
 
+      if (isWide) target.style.flex = 'none';
+      target.style.height = `${finalHeight}px`;
+
+      let fired = false;
       const onEnd = () => {
-        mapContainer.classList.remove('map-container-smooth');
-        mapContainer.removeEventListener('transitionend', onEnd);
+        if (fired) return;
+        fired = true;
+
+        target.classList.remove('map-section-smooth');
+        target.removeEventListener('transitionend', onEnd);
         localStorage.setItem('map-height', `${finalHeight}px`);
         this.ctx.map?.setIsResizing(false);
-        this.ctx.map?.render();
+        this.ctx.map?.resize();
       };
 
-      mapContainer.addEventListener('transitionend', onEnd);
-      // Fallback for transitionend
+      target.addEventListener('transitionend', onEnd);
+      this.ctx.map?.resize();
       setTimeout(onEnd, 500);
     });
 
     document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
+      const isWide = window.innerWidth >= 1600;
+      const target = isWide ? mapContainer : mapSection;
+
       const deltaY = e.clientY - startY;
       const newHeight = Math.max(getMinHeight(), Math.min(startHeight + deltaY, getMaxHeight()));
-      mapContainer.style.height = `${newHeight}px`;
+
+      if (isWide) target.style.flex = 'none';
+      target.style.height = `${newHeight}px`;
+
+      // Trigger dynamic map update
+      this.ctx.map?.resize();
     });
 
     document.addEventListener('mouseup', endResize);

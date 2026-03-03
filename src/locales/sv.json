@@ -419,7 +419,12 @@
     "playback": {
       "live": "LIVE",
       "toggleMode": "Växla uppspelningsläge",
-      "historicalPlayback": "Historisk uppspelning"
+      "historicalPlayback": "Historisk uppspelning",
+      "close": "Nära",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "deckgl": {
       "views": {

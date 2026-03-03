@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "สลับโหมดเล่นย้อน",
       "live": "สด",
-      "historicalPlayback": "เล่นย้อนหลัง"
+      "historicalPlayback": "เล่นย้อนหลัง",
+      "close": "ปิด",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "ดัชนีพิซซ่าเพนตากอน",

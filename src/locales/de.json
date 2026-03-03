@@ -933,7 +933,12 @@
     "playback": {
       "toggleMode": "Schalten Sie den Wiedergabemodus um",
       "historicalPlayback": "Historische Wiedergabe",
-      "live": "LIVE"
+      "live": "LIVE",
+      "close": "Schließen",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "stablecoins": {
       "pegHealth": "Bindungsstabilität",

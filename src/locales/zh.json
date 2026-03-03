@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "切换回放模式",
       "live": "实时",
-      "historicalPlayback": "历史回放"
+      "historicalPlayback": "历史回放",
+      "close": "关闭",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "五角大楼披萨指数",

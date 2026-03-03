@@ -21,7 +21,7 @@ export class SignalModal {
       <div class="signal-modal">
         <div class="signal-modal-header">
           <span class="signal-modal-title">🎯 ${t('modals.signal.title')}</span>
-          <button class="signal-modal-close">×</button>
+          <button class="signal-modal-close" aria-label="Close">×</button>
         </div>
         <div class="signal-modal-content"></div>
         <div class="signal-modal-footer">

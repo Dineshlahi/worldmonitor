@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "Εναλλαγή Λειτουργίας Αναπαραγωγής",
       "live": "ΖΩΝΤΑΝΑ",
-      "historicalPlayback": "Ιστορική Αναπαραγωγή"
+      "historicalPlayback": "Ιστορική Αναπαραγωγή",
+      "close": "Κλείσιμο",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Pentagon Pizza Index",

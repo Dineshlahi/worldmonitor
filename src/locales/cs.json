@@ -699,7 +699,12 @@
     "playback": {
       "toggleMode": "Přepnout režim přehrávání",
       "live": "ŽIVĚ",
-      "historicalPlayback": "Historické přehrávání"
+      "historicalPlayback": "Historické přehrávání",
+      "close": "Zavřít",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Pentagon Pizza Index",

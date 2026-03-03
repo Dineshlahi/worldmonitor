@@ -232,18 +232,18 @@ export class UnifiedSettings {
       <div class="modal unified-settings-modal">
         <div class="modal-header">
           <span class="modal-title">${t('header.settings')}</span>
-          <button class="modal-close unified-settings-close">×</button>
+          <button class="modal-close unified-settings-close" aria-label="Close">×</button>
         </div>
-        <div class="unified-settings-tabs">
-          <button class="${tabClass('general')}" data-tab="general">${t('header.tabGeneral')}</button>
-          <button class="${tabClass('panels')}" data-tab="panels">${t('header.tabPanels')}</button>
-          <button class="${tabClass('sources')}" data-tab="sources">${t('header.tabSources')}</button>
-          <button class="${tabClass('status')}" data-tab="status">${t('panels.status')}</button>
+        <div class="unified-settings-tabs" role="tablist" aria-label="Settings">
+          <button class="${tabClass('general')}" data-tab="general" role="tab" aria-selected="${this.activeTab === 'general'}" id="us-tab-general" aria-controls="us-tab-panel-general">${t('header.tabGeneral')}</button>
+          <button class="${tabClass('panels')}" data-tab="panels" role="tab" aria-selected="${this.activeTab === 'panels'}" id="us-tab-panels" aria-controls="us-tab-panel-panels">${t('header.tabPanels')}</button>
+          <button class="${tabClass('sources')}" data-tab="sources" role="tab" aria-selected="${this.activeTab === 'sources'}" id="us-tab-sources" aria-controls="us-tab-panel-sources">${t('header.tabSources')}</button>
+          <button class="${tabClass('status')}" data-tab="status" role="tab" aria-selected="${this.activeTab === 'status'}" id="us-tab-status" aria-controls="us-tab-panel-status">${t('panels.status')}</button>
         </div>
-        <div class="unified-settings-tab-panel${this.activeTab === 'general' ? ' active' : ''}" data-panel-id="general">
+        <div class="unified-settings-tab-panel${this.activeTab === 'general' ? ' active' : ''}" data-panel-id="general" id="us-tab-panel-general" role="tabpanel" aria-labelledby="us-tab-general">
           ${this.renderGeneralContent()}
         </div>
-        <div class="unified-settings-tab-panel${this.activeTab === 'panels' ? ' active' : ''}" data-panel-id="panels">
+        <div class="unified-settings-tab-panel${this.activeTab === 'panels' ? ' active' : ''}" data-panel-id="panels" id="us-tab-panel-panels" role="tabpanel" aria-labelledby="us-tab-panels">
           <div class="unified-settings-region-wrapper">
             <div class="unified-settings-region-bar" id="usPanelCatBar"></div>
           </div>
@@ -255,7 +255,7 @@ export class UnifiedSettings {
             <button class="panels-reset-layout">${t('header.resetLayout')}</button>
           </div>
         </div>
-        <div class="unified-settings-tab-panel${this.activeTab === 'sources' ? ' active' : ''}" data-panel-id="sources">
+        <div class="unified-settings-tab-panel${this.activeTab === 'sources' ? ' active' : ''}" data-panel-id="sources" id="us-tab-panel-sources" role="tabpanel" aria-labelledby="us-tab-sources">
           <div class="unified-settings-region-wrapper">
             <div class="unified-settings-region-bar" id="usRegionBar"></div>
           </div>
@@ -269,7 +269,7 @@ export class UnifiedSettings {
             <button class="sources-select-none">${t('common.selectNone')}</button>
           </div>
         </div>
-        <div class="unified-settings-tab-panel${this.activeTab === 'status' ? ' active' : ''}" data-panel-id="status">
+        <div class="unified-settings-tab-panel${this.activeTab === 'status' ? ' active' : ''}" data-panel-id="status" id="us-tab-panel-status" role="tabpanel" aria-labelledby="us-tab-status">
           <div class="us-status-content" id="usStatusContent"></div>
         </div>
       </div>
@@ -290,7 +290,9 @@ export class UnifiedSettings {
 
     // Update tab buttons
     this.overlay.querySelectorAll('.unified-settings-tab').forEach(el => {
-      el.classList.toggle('active', (el as HTMLElement).dataset.tab === tab);
+      const isActive = (el as HTMLElement).dataset.tab === tab;
+      el.classList.toggle('active', isActive);
+      el.setAttribute('aria-selected', String(isActive));
     });
 
     // Update tab panels

@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "再生モード切替",
       "live": "LIVE",
-      "historicalPlayback": "ヒストリカル再生"
+      "historicalPlayback": "ヒストリカル再生",
+      "close": "閉じる",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "ペンタゴンピザ指数",

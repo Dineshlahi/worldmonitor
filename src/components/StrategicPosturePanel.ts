@@ -467,7 +467,7 @@ export class StrategicPosturePanel extends Panel {
 
         <div class="posture-footer">
           <span class="posture-updated">${this.isStale ? '⚠️ ' : ''}${t('components.strategicPosture.updated')} ${updatedTime}</span>
-          <button class="posture-refresh-btn" title="${t('components.strategicPosture.refresh')}">↻</button>
+          <button class="posture-refresh-btn" title="${t('components.strategicPosture.refresh')}" aria-label="${t('components.strategicPosture.refresh')}">↻</button>
         </div>
       </div>
     `;

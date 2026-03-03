@@ -73,6 +73,8 @@ export class MapContainer {
   private svgMap: MapComponent | null = null;
   private initialState: MapContainerState;
   private useDeckGL: boolean;
+  private isResizingInternal = false;
+  private resizeObserver: ResizeObserver | null = null;
 
   constructor(container: HTMLElement, initialState: MapContainerState) {
     this.container = container;
@@ -134,6 +136,16 @@ export class MapContainer {
     } else {
       this.initSvgMap('[MapContainer] Initializing SVG map (mobile/fallback mode)');
     }
+
+    // Automatic resize on container change (fixes gaps on load/layout shift)
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        // Skip if we are already handling resize manually via drag handlers
+        if (this.isResizingInternal) return;
+        this.resize();
+      });
+      this.resizeObserver.observe(this.container);
+    }
   }
 
   // Unified public API - delegates to active map implementation
@@ -145,7 +157,16 @@ export class MapContainer {
     }
   }
 
+  public resize(): void {
+    if (this.useDeckGL) {
+      this.deckGLMap?.resize();
+    } else {
+      this.svgMap?.resize();
+    }
+  }
+
   public setIsResizing(isResizing: boolean): void {
+    this.isResizingInternal = isResizing;
     if (this.useDeckGL) {
       this.deckGLMap?.setIsResizing(isResizing);
     } else {
@@ -650,6 +671,7 @@ export class MapContainer {
   }
 
   public destroy(): void {
+    this.resizeObserver?.disconnect();
     if (this.useDeckGL) {
       this.deckGLMap?.destroy();
     } else {

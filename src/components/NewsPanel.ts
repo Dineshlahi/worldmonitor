@@ -226,7 +226,7 @@ export class NewsPanel extends Panel {
     this.summaryContainer.innerHTML = `
       <div class="panel-summary-content">
         <span class="panel-summary-text">${escapeHtml(summary)}</span>
-        <button class="panel-summary-close" title="${t('components.newsPanel.close')}">×</button>
+        <button class="panel-summary-close" title="${t('components.newsPanel.close')}" aria-label="${t('components.newsPanel.close')}">×</button>
       </div>
     `;
     this.summaryContainer.querySelector('.panel-summary-close')?.addEventListener('click', () => this.hideSummary());

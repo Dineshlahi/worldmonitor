@@ -116,7 +116,7 @@ export async function summarizeArticle(
             top_p: 0.9,
             ...extraBody,
           }),
-          signal: AbortSignal.timeout(30_000),
+          signal: AbortSignal.timeout(25_000),
         });
 
         if (!response.ok) {

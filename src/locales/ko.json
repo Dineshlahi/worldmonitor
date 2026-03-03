@@ -703,7 +703,12 @@
     "playback": {
       "toggleMode": "재생 모드 전환",
       "live": "LIVE",
-      "historicalPlayback": "과거 데이터 재생"
+      "historicalPlayback": "과거 데이터 재생",
+      "close": "닫기",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "펜타곤 피자 지수",

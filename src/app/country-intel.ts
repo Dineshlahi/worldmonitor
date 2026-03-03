@@ -17,7 +17,8 @@ import {
   iso3ToIso2Code,
   nameToCountryCode,
 } from '@/services/country-geometry';
-import { calculateCII, getCountryData, TIER1_COUNTRIES, type CountryScore } from '@/services/country-instability';
+import { calculateCII, getCountryData, TIER1_COUNTRIES, hasIntelligenceSignalsLoaded, type CountryScore } from '@/services/country-instability';
+import { getCachedScores, toCountryScore } from '@/services/cached-risk-scores';
 import { signalAggregator } from '@/services/signal-aggregator';
 import { dataFreshness } from '@/services/data-freshness';
 import { fetchCountryMarkets } from '@/services/prediction';
@@ -150,7 +151,13 @@ export class CountryIntelManager implements AppModule {
     if (canonicalName !== code) country = canonicalName;
 
     const scores = calculateCII();
-    const score = scores.find((s) => s.code === code) ?? null;
+    let score = scores.find((s) => s.code === code) ?? null;
+
+    if (!hasIntelligenceSignalsLoaded()) {
+      const cached = getCachedScores()?.cii.find((c) => c.code === code);
+      if (cached) score = toCountryScore(cached);
+    }
+
     const signals = this.getCountrySignals(code, country);
 
     this.ctx.countryBriefPage.show(country, code, score, signals);
@@ -329,6 +336,22 @@ export class CountryIntelManager implements AppModule {
       console.error('[CountryBrief] fetch error:', err);
       this.ctx.countryBriefPage?.updateBrief({ brief: '', country, code, error: 'Failed to generate brief' });
     }
+  }
+
+  refreshOpenBrief(): void {
+    const page = this.ctx.countryBriefPage;
+    if (!page?.isVisible()) return;
+    const code = page.getCode();
+    if (!code || code === '__loading__') return;
+    const name = TIER1_COUNTRIES[code] ?? CountryIntelManager.resolveCountryName(code);
+    const scores = calculateCII();
+    let score = scores.find((s) => s.code === code) ?? null;
+    if (!hasIntelligenceSignalsLoaded()) {
+      const cached = getCachedScores()?.cii.find((c) => c.code === code);
+      if (cached) score = toCountryScore(cached);
+    }
+    const signals = this.getCountrySignals(code, name);
+    page.updateScore?.(score, signals);
   }
 
   private async fetchCountryIntelBrief(code: string, contextSnapshot: string): Promise<string> {

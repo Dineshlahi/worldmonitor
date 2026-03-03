@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "Oynatma Modunu Degistir",
       "live": "CANLI",
-      "historicalPlayback": "Gecmis Kayit Oynatma"
+      "historicalPlayback": "Gecmis Kayit Oynatma",
+      "close": "Kapat",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Pentagon Pizza Endeksi",

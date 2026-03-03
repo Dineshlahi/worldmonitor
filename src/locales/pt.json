@@ -419,7 +419,12 @@
     "playback": {
       "live": "Live",
       "toggleMode": "Alternar modo de reprodução",
-      "historicalPlayback": "Reprodução Histórica"
+      "historicalPlayback": "Reprodução Histórica",
+      "close": "Fechar",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "deckgl": {
       "views": {

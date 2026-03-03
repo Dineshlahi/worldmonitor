@@ -683,7 +683,12 @@
     "playback": {
       "toggleMode": "Переключить режим воспроизведения",
       "live": "ПРЯМОЙ ЭФИР",
-      "historicalPlayback": "Историческое воспроизведение"
+      "historicalPlayback": "Историческое воспроизведение",
+      "close": "Закрыть",
+      "skipToStart": "Skip to start",
+      "previous": "Previous",
+      "next": "Next",
+      "skipToEnd": "Skip to end"
     },
     "pizzint": {
       "title": "Индекс пиццерий Пентагона",

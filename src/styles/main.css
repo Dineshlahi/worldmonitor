@@ -1634,12 +1634,15 @@ body.panel-resize-active iframe {
   line-height: 1;
   transition: color 0.15s;
 }
+
 .live-news-manage-row:hover .live-news-manage-row-remove-x {
   display: inline;
 }
+
 .live-news-manage-row-remove-x:hover {
   color: var(--red);
 }
+
 .live-news-manage-edit {
   padding: 4px 8px;
   font-size: 10px;
@@ -1980,10 +1983,12 @@ body.panel-resize-active iframe {
   background: rgba(68, 255, 136, 0.05);
   cursor: pointer;
 }
+
 .live-news-manage-card.added:hover {
   border-color: rgba(255, 80, 80, 0.5);
   background: rgba(255, 80, 80, 0.08);
 }
+
 .live-news-manage-card:active {
   transform: scale(0.97);
 }
@@ -2045,9 +2050,18 @@ body.panel-resize-active iframe {
 .live-news-manage-card.added .live-news-manage-card-action {
   color: var(--green);
 }
-.live-news-manage-card:hover .live-news-manage-card-action { color: var(--green); }
-.live-news-manage-card.added .live-news-manage-card-action { color: var(--green); }
-.live-news-manage-card.added:hover .live-news-manage-card-action { color: var(--red); }
+
+.live-news-manage-card:hover .live-news-manage-card-action {
+  color: var(--green);
+}
+
+.live-news-manage-card.added .live-news-manage-card-action {
+  color: var(--green);
+}
+
+.live-news-manage-card.added:hover .live-news-manage-card-action {
+  color: var(--red);
+}
 
 /* Tab count badge */
 .live-news-manage-tab-count {
@@ -2171,6 +2185,16 @@ body.live-news-fullscreen-active {
 
 body.live-news-fullscreen-active .community-widget {
   display: none;
+}
+
+/* Hide map overlays and sibling panels behind fullscreen panel (#829, #859) */
+body.live-news-fullscreen-active .layer-toggles,
+body.live-news-fullscreen-active .map-legend {
+  display: none !important;
+}
+
+body.live-news-fullscreen-active .panels-grid > *:not(.live-news-fullscreen) {
+  visibility: hidden !important;
 }
 
 .live-indicator-btn {
@@ -16282,6 +16306,10 @@ body.has-breaking-alert .panels-grid {
   }
 
   .map-container-smooth {
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .map-section-smooth {
     transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 

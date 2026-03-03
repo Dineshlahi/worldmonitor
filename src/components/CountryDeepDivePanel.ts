@@ -71,6 +71,7 @@ export class CountryDeepDivePanel implements CountryBriefPanel {
   private marketsBody: HTMLElement | null = null;
   private briefBody: HTMLElement | null = null;
   private timelineBody: HTMLElement | null = null;
+  private scoreCard: HTMLElement | null = null;
 
   private readonly handleGlobalKeydown = (event: KeyboardEvent): void => {
     if (!this.panel.classList.contains('active')) return;
@@ -403,6 +404,30 @@ export class CountryDeepDivePanel implements CountryBriefPanel {
     this.renderEconomicIndicators();
   }
 
+  public updateScore(score: CountryScore | null, _signals: CountryBriefSignals): void {
+    if (!this.scoreCard) return;
+    // Partial DOM update: score number, level color, trend, component bars only
+    const top = this.scoreCard.firstElementChild as HTMLElement | null;
+    while (this.scoreCard.childElementCount > 1) {
+      this.scoreCard.lastElementChild?.remove();
+    }
+    if (top) {
+      const updatedEl = top.querySelector('.cdp-updated');
+      if (updatedEl) updatedEl.textContent = `Updated ${this.shortDate(score?.lastUpdated ?? new Date())}`;
+    }
+    if (score) {
+      const band = this.ciiBand(score.score);
+      const scoreRow = this.el('div', 'cdp-score-row');
+      const value = this.el('div', `cdp-score-value cii-${band}`, `${score.score}/100`);
+      const trend = this.el('div', 'cdp-trend', `${this.trendArrow(score.trend)} ${score.trend}`);
+      scoreRow.append(value, trend);
+      this.scoreCard.append(scoreRow);
+      this.scoreCard.append(this.renderComponentBars(score.components));
+    } else {
+      this.scoreCard.append(this.makeEmpty(t('countryBrief.ciiUnavailable')));
+    }
+  }
+
   public updateStock(data: StockIndexData): void {
     if (!data.available) {
       this.renderEconomicIndicators();
@@ -499,6 +524,7 @@ export class CountryDeepDivePanel implements CountryBriefPanel {
   }
 
   private renderLoading(): void {
+    this.scoreCard = null;
     this.content.replaceChildren();
     const loading = this.el('div', 'cdp-loading');
     loading.append(
@@ -566,6 +592,7 @@ export class CountryDeepDivePanel implements CountryBriefPanel {
     header.append(left, right);
 
     const scoreCard = this.el('section', 'cdp-card cdp-score-card');
+    this.scoreCard = scoreCard;
     const top = this.el('div', 'cdp-score-top');
     const label = this.el('span', 'cdp-score-label', t('countryBrief.instabilityIndex'));
     const updated = this.el('span', 'cdp-updated', `Updated ${this.shortDate(score?.lastUpdated ?? new Date())}`);
