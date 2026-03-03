@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, 'dist');
-const PORT = parseInt(process.env.PORT ?? '3000', 10);
+const PORT = parseInt(process.env.PORT ?? '8080', 10);
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = [

@@ -20,6 +20,6 @@ COPY --from=builder /app/railway-server.mjs ./railway-server.mjs
 
 # Railway injects PORT=8080 at runtime — match it with EXPOSE so Railway
 # knows where to route external traffic.
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["node", "railway-server.mjs"]
