@@ -254,23 +254,6 @@ financial, military, environmental, humanitarian, and technology domains.
 
 ---
 
-#### 11 — blockchain.info (Bitcoin Hash Rate)
-
-| Field | Value |
-|---|---|
-| **Base URL** | `https://blockchain.info/` |
-| **Authentication** | None |
-| **Env Vars** | — |
-| **Rate Limits** | Public; moderate (avoid rapid bursts) |
-| **Data Format** | JSON |
-| **WM Endpoints** | `/api/macro-signals` (composite input) |
-| **Frontend Services** | `MacroService` → MacroSignals |
-| **Degradation** | Hash-rate signal omitted from aggregate; composite score adjusted |
-| **Tier Needed** | Public |
-| **Quirks** | Used specifically for BTC network hash-rate as a macro signal. Endpoint: `/q/hashrate`. |
-
----
-
 ### 3.3 Military & Security
 
 ---
@@ -886,7 +869,6 @@ graph TD
     M1[FRED<br/>Treasury yields, rates] --> MS[/api/macro-signals<br/>Composite Builder]
     M2[CoinGecko<br/>Crypto market cap] --> MS
     M3[alternative.me<br/>Fear & Greed] --> MS
-    M4[blockchain.info<br/>BTC hash rate] --> MS
     MS --> MSvc[MacroService]
     MSvc --> MP[MacroSignalsPanel]
 ```

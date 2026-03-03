@@ -57,9 +57,8 @@ async function computeMacroSignals(): Promise<GetMacroSignalsResponse> {
   const qqqChart = await fetchJSON(`${yahooBase}/QQQ?range=1y&interval=1d`).catch(() => null);
   const xlpChart = await fetchJSON(`${yahooBase}/XLP?range=1y&interval=1d`).catch(() => null);
   // Non-Yahoo calls can go in parallel
-  const [fearGreed, mempoolHash] = await Promise.allSettled([
+  const [fearGreed] = await Promise.allSettled([
     fetchJSON('https://api.alternative.me/fng/?limit=30&format=json'),
-    fetchJSON('https://mempool.space/api/v1/mining/hashrate/1m'),
   ]);
 
   const jpyPrices = jpyChart ? extractClosePrices(jpyChart) : [];
@@ -122,20 +121,9 @@ async function computeMacroSignals(): Promise<GetMacroSignalsResponse> {
     mayerMultiple = +(btcCurrent / btcSma200).toFixed(2);
   }
 
-  // 5. Mining Power (Bitcoin network hashrate)
+  // 5. Mining Power (Bitcoin network hashrate) - Removed for Railway deployment rules
   let hashStatus = 'UNKNOWN';
   let hashChange: number | null = null;
-  if (mempoolHash.status === 'fulfilled') {
-    const hr = mempoolHash.value?.hashrates || mempoolHash.value;
-    if (Array.isArray(hr) && hr.length >= 2) {
-      const recent = hr[hr.length - 1]?.avgHashrate || hr[hr.length - 1];
-      const older = hr[0]?.avgHashrate || hr[0];
-      if (recent && older && older > 0) {
-        hashChange = +((recent - older) / older * 100).toFixed(1);
-        hashStatus = hashChange > 3 ? 'GROWING' : hashChange < -3 ? 'DECLINING' : 'STABLE';
-      }
-    }
-  }
 
   // 6. Price Momentum (Mayer Multiple)
   let momentumStatus = 'UNKNOWN';

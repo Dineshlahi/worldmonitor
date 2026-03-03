@@ -132,7 +132,7 @@ The project is built with TypeScript, Vite, MapLibre GL JS, deck.gl, D3.js, and 
 - Polymarket: Prediction market probabilities for geopolitical events (3-tier JA3 bypass)
 - Yahoo Finance: Stock data, ETF prices, macro signals
 - CoinGecko: Stablecoin pricing and market caps
-- mempool.space: Bitcoin hash rate data
+
 - alternative.me: Fear & Greed Index
 - EIA (Energy Information Administration): Oil prices, US production, inventory
 - FRED (Federal Reserve Economic Data): Economic indicators
