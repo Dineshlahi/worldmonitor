@@ -1,6 +1,12 @@
 {
   "$schema": "https://schema.railpack.com",
+  "build": {
+    "buildCommand": "npm ci --ignore-scripts && npm run build"
+  },
   "deploy": {
-    "aptPackages": ["curl"]
+    "aptPackages": [
+      "curl"
+    ],
+    "startCommand": "node railway-server.mjs"
   }
 }
