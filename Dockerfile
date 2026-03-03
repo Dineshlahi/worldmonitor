@@ -17,12 +17,13 @@ FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-# Serve the static Vite output with a minimal HTTP server
-RUN npm install -g serve@14
-
+# Copy only what the runtime server needs
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/api ./api
+COPY --from=builder /app/server-railway.mjs ./server-railway.mjs
+COPY package.json ./
 
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["node", "server-railway.mjs"]

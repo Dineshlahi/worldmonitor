@@ -7,6 +7,8 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^https?:\/\/[a-z0-9-]+\.tauri\.localhost(:\d+)?$/i,
   /^tauri:\/\/localhost$/,
   /^asset:\/\/localhost$/,
+  // Railway deployments
+  /^https:\/\/[a-z0-9-]+\.up\.railway\.app$/,
 ];
 
 function isAllowedOrigin(origin) {
