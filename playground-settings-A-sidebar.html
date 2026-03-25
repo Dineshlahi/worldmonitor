@@ -139,6 +139,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .diag-row input[type=checkbox]{accent-color:var(--accent)}
 .traffic-placeholder{font-size:12px;color:var(--text-sec);font-style:italic;padding:16px 0}
 
+/* Live data preview */
+.live-preview{margin-top:10px;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.live-preview-header{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--border)}
+.live-preview-header span{font-size:11px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+.btn-fetch{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);color:var(--accent);font-size:11px;font-weight:600;padding:4px 12px;border-radius:4px;cursor:pointer;font:inherit;transition:background .15s}
+.btn-fetch:hover{background:rgba(96,165,250,0.22)}.btn-fetch:disabled{opacity:0.4;cursor:default}
+.live-preview-body{padding:10px 12px;font-size:12px;color:var(--text-sec);line-height:1.6;min-height:36px}
+.lpd{margin-bottom:4px}.lpd strong{color:var(--text)}
+.lpd.red{color:var(--red)}.lpd.yellow{color:var(--yellow)}.lpd.green{color:var(--green)}
+.lp-spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.1);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* Footer */
 .footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
 .btn{font:inherit;font-size:13px;font-weight:600;padding:8px 24px;border-radius:6px;cursor:pointer;min-width:80px;text-align:center;transition:background .15s,border-color .15s,transform .1s;letter-spacing:.01em}
@@ -215,6 +227,15 @@ const CATEGORIES = [
     features:[
       { name:'Finnhub Market Data', desc:'Real-time stock quotes and market data', keys:['FINNHUB_API_KEY'], status:'ready', on:true, fallback:'Stock ticker uses limited free data.', signup:'https://finnhub.io/register' },
       { name:'ACLED Conflicts', desc:'Conflict and protest event feeds', keys:['ACLED_ACCESS_TOKEN'], status:'ready', on:true, fallback:'Conflict/protest overlays are hidden.', signup:'https://developer.acleddata.com/' },
+    ]},
+  { id:'science', icon:'🔭', label:'Science & Astronomy', dot:'yellow', count:'2/6',
+    features:[
+      { name:'NASA Open APIs', desc:'APOD daily cosmos image, DONKI space weather events & coronal mass ejections', keys:['NASA_API_KEY'], status:'ready', on:true, fallback:'Falls back to NASA demo key (rate-limited, 30 req/hr).', signup:'https://api.nasa.gov/#signUp', liveEndpoint:'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', liveFmt:'apod' },
+      { name:'Space Weather — NOAA SWPC', desc:'Real-time solar flare alerts, geomagnetic storms, X-ray flux & proton events', keys:['NOAA_SWPC_API_KEY'], status:'needs', on:true, fallback:'Public SWPC JSON feeds used (no alerts, 15-min delay).', signup:'https://www.swpc.noaa.gov/products/alerts-watches-and-warnings', liveEndpoint:'https://services.swpc.noaa.gov/products/alerts.json', liveFmt:'swpc' },
+      { name:'Asteroid & NEO Watch', desc:'Near-Earth Object close approaches, hazardous asteroid radar from NASA CNEOS', keys:['NASA_API_KEY'], status:'ready', on:true, fallback:'Uses NASA demo key — limited to 7-day NEO feed.', signup:'https://api.nasa.gov/#signUp', liveEndpoint:'https://api.nasa.gov/neo/rest/v1/feed?start_date=2026-03-25&end_date=2026-03-25&api_key=DEMO_KEY', liveFmt:'neo' },
+      { name:'Seismic Event Monitor', desc:'Live earthquake events worldwide from USGS Earthquake Hazards — M2.5+ alerting', keys:['USGS_EARTHQUAKE_API_KEY'], status:'needs', on:false, fallback:'Public USGS GeoJSON feed used (M4.5+ events, 1-hr delay).', signup:'https://earthquake.usgs.gov/fdsnws/event/1/', liveEndpoint:'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson', liveFmt:'quake' },
+      { name:'Aurora Forecast (NOAA Ovation)', desc:'Kp-index, auroral oval prediction, geomagnetic storm watch for northern/southern lights', keys:['NOAA_AURORA_API_KEY'], status:'needs', on:false, fallback:'Public NOAA Ovation Prime model data (3-hr forecast only).', signup:'https://www.swpc.noaa.gov/content/tips-viewing-aurora', liveEndpoint:'https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', liveFmt:'kp' },
+      { name:'Copernicus Ocean & Earth Monitor', desc:'Ocean heat anomalies, sea-level rise, polar ice extent & extreme climate events via Copernicus CDS', keys:['COPERNICUS_CDS_API_KEY','CDS_UID'], status:'needs', on:false, fallback:'Ocean layer is disabled — requires CDS account.', signup:'https://cds.climate.copernicus.eu/user/register' },
     ]},
   { id:'sep2', sep:true },
   { id:'debug', icon:'🔧', label:'Debug & Logs', dot:null },
@@ -329,6 +350,7 @@ function renderFeatureSection(cat) {
         <div class="feat-body-inner">
           ${keys}
           ${f.status!=='ready'?`<div class="feat-fallback">${f.fallback}</div>`:''}
+          ${f.liveEndpoint ? `<div class="live-preview" id="lp-${cat.id}-${i}"><div class="live-preview-header"><span>🔴 Live Sample</span><button class="btn-fetch" data-endpoint="${f.liveEndpoint.replace(/&/g,'&amp;')}" data-fmt="${f.liveFmt||''}" data-body="lp-${cat.id}-${i}-body">Fetch</button></div><div class="live-preview-body" id="lp-${cat.id}-${i}-body">Click <strong>Fetch</strong> to pull live data from this source.</div></div>` : ''}
         </div>
       </div>
     </div>`;
@@ -368,6 +390,82 @@ function renderDebug() {
   </div>`;
 }
 
+async function fetchLiveSample(btn, endpoint, fmt, bodyId) {
+  btn.disabled = true; btn.textContent = 'Loading…';
+  const body = document.getElementById(bodyId);
+  body.innerHTML = '<span class="lp-spinner"></span> Fetching live data…';
+  try {
+    const r = await fetch(endpoint);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    body.innerHTML = formatLiveData(data, fmt);
+  } catch(e) {
+    body.innerHTML = `<span class="lpd red">⚠ ${e.message}</span>`;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Refresh';
+  }
+}
+
+function formatLiveData(data, fmt) {
+  if (fmt === 'apod') {
+    const img = data.media_type === 'image' ? `<div style="margin-top:8px"><img src="${data.hdurl||data.url}" style="width:100%;border-radius:4px;max-height:120px;object-fit:cover" onerror="this.style.display='none'"></div>` : '';
+    return `<div class="lpd"><strong>📸 ${data.title}</strong></div><div class="lpd" style="font-size:11px;opacity:.6">${data.date} · ${data.copyright ? '© ' + data.copyright : 'Public Domain'}</div><div class="lpd" style="margin-top:6px;font-size:11px;max-height:54px;overflow:hidden">${(data.explanation||'').slice(0,220)}…</div>${img}`;
+  }
+  if (fmt === 'swpc') {
+    const alerts = (Array.isArray(data) ? data : []).slice(0,4);
+    if (!alerts.length) return '<div class="lpd green">✅ No active space weather alerts right now.</div>';
+    return alerts.map(a => {
+      const msg = (typeof a === 'string' ? a : (a.message || JSON.stringify(a))).slice(0, 160);
+      const hi = /X-class|severe|extreme|warning/i.test(msg);
+      return `<div class="lpd ${hi?'red':'yellow'}">⚡ ${msg}</div>`;
+    }).join('');
+  }
+  if (fmt === 'neo') {
+    const neos = Object.values(data.near_earth_objects || {}).flat();
+    const haz = neos.filter(n => n.is_potentially_hazardous_asteroid);
+    const top = neos.slice(0,3).map(n => {
+      const ca = n.close_approach_data?.[0];
+      const ld = ca ? parseFloat(ca.miss_distance.lunar).toFixed(2) + ' LD' : 'N/A';
+      const v = ca ? parseFloat(ca.relative_velocity.kilometers_per_hour).toFixed(0) + ' km/h' : '';
+      return `<div class="lpd">${n.is_potentially_hazardous_asteroid?'☄ <span class="red">HAZARDOUS</span> ':'🪨 '}<strong>${n.name}</strong> · miss ${ld} · ${v}</div>`;
+    }).join('');
+    return `<div class="lpd"><strong>${neos.length}</strong> NEOs tracked · <span class="${haz.length?'red':'green'}">${haz.length ? '☄ ' + haz.length + ' HAZARDOUS' : '✅ None hazardous today'}</span></div>${top}`;
+  }
+  if (fmt === 'quake') {
+    const feats = (data.features || []).slice(0,5);
+    if (!feats.length) return '<div class="lpd green">✅ No significant earthquakes this month.</div>';
+    return feats.map(f => {
+      const p = f.properties, mag = p.mag;
+      const cls = mag >= 7 ? 'red' : mag >= 6 ? 'yellow' : '';
+      return `<div class="lpd ${cls}">🌍 <strong>M${mag}</strong> — ${p.place} <span style="opacity:.55;font-size:11px">${new Date(p.time).toLocaleDateString()}</span></div>`;
+    }).join('');
+  }
+  if (fmt === 'kp') {
+    const rows = Array.isArray(data) ? data.filter(r => r[1] !== 'Kp').slice(-5) : [];
+    const latest = rows[rows.length - 1];
+    if (!latest) return '<div class="lpd">No Kp data available.</div>';
+    const kp = parseFloat(latest[1]);
+    const cls = kp >= 5 ? 'red' : kp >= 3 ? 'yellow' : 'green';
+    const lbl = kp >= 7 ? '🌌 Severe Storm' : kp >= 5 ? '⚡ Minor Storm' : kp >= 3 ? '🌤 Active' : '✅ Quiet';
+    const lat = Math.max(40, Math.round(66.5 - kp * 2.5));
+    return `<div class="lpd"><strong>Kp Index: <span class="${cls}">${kp}</span></strong> — ${lbl}</div><div class="lpd" style="font-size:11px">Aurora visible above ~${lat}° latitude</div><div style="margin-top:6px;display:flex;gap:3px;align-items:flex-end;height:32px">${rows.map(r=>{ const v=parseFloat(r[1])||0; const h=Math.round((v/9)*30); const c=v>=5?'var(--red)':v>=3?'var(--yellow)':'var(--green)'; return `<div title="Kp ${v}" style="flex:1;height:${h+2}px;background:${c};border-radius:2px 2px 0 0;opacity:.85"></div>`; }).join('')}</div><div style="font-size:10px;color:var(--text-sec);margin-top:2px">Last 5 readings</div>`;
+  }
+  if (fmt === 'news') {
+    const items = (data.categories?.science?.items || []).slice(0, 8);
+    if (!items.length) return '<div class="lpd yellow">⚠ No science headlines yet — feeds may still be warming up. Try again in 30s.</div>';
+    return items.map(item => {
+      const ago = Math.round((Date.now() - item.publishedAt) / 60000);
+      const agoStr = ago < 60 ? ago + 'm ago' : Math.round(ago/60) + 'h ago';
+      const alert = item.isAlert;
+      return `<div class="lpd ${alert?'yellow':''}" style="border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:5px">
+        <a href="${item.link}" target="_blank" style="color:${alert?'var(--yellow)':'var(--text)'};text-decoration:none;font-size:12px;font-weight:${alert?'700':'500'}">${alert?'⚡ ':'📡 '}${item.title}</a>
+        <div style="font-size:10px;opacity:.5;margin-top:2px">${item.source} · ${agoStr}</div>
+      </div>`;
+    }).join('');
+  }
+  return `<pre style="font-size:10px;max-height:80px;overflow:auto">${JSON.stringify(data,null,2).slice(0,400)}</pre>`;
+}
+
 function renderSection(id) {
   renderSidebar(id);
   const area = document.getElementById('contentArea');
@@ -386,7 +484,18 @@ function renderSection(id) {
 
   const cat = CATEGORIES.find(c=>c.id===id);
   if (!cat || !cat.features) return;
-  area.innerHTML = renderFeatureSection(cat);
+
+  // Science section: prepend a live news panel above the features
+  const newsPanel = id === 'science' ? `
+    <div class="live-preview" id="lp-science-news" style="margin-bottom:16px">
+      <div class="live-preview-header">
+        <span>📡 Science &amp; Astronomy Headlines</span>
+        <button class="btn-fetch" data-endpoint="/api/news/v1/list-feed-digest?variant=full&amp;lang=en" data-fmt="news" data-body="lp-science-news-body">Fetch Headlines</button>
+      </div>
+      <div class="live-preview-body" id="lp-science-news-body">Click <strong>Fetch Headlines</strong> to load live news from NASA, ESA, Space.com, EarthSky, ArXiv &amp; more.</div>
+    </div>` : '';
+
+  area.innerHTML = newsPanel + renderFeatureSection(cat);
 
   // Toggle expand
   area.querySelectorAll('.feat-header').forEach(hdr => {
@@ -398,8 +507,15 @@ function renderSection(id) {
   });
 
   // Toggle on/off
-  area.querySelectorAll('.feat-toggle').forEach(tog => {
-    tog.addEventListener('click', () => tog.classList.toggle('on'));
+  area.querySelectorAll('.feat-toggle').forEach(tog =>
+    tog.addEventListener('click', () => tog.classList.toggle('on'))
+  );
+
+  // Fetch live samples
+  area.querySelectorAll('.btn-fetch').forEach(btn => {
+    btn.addEventListener('click', () =>
+      fetchLiveSample(btn, btn.dataset.endpoint, btn.dataset.fmt, btn.dataset.body)
+    );
   });
 }
 
