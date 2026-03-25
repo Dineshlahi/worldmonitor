@@ -13,6 +13,9 @@ RUN npm run build
 # ── Runtime stage ────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 
+# Alpine doesn't include CA certificates by default — required for HTTPS RSS fetches
+RUN apk add --no-cache ca-certificates
+
 WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
