@@ -172,6 +172,18 @@ const VARIANT_FEEDS = {
         africa: [
             { name: 'BBC Africa', url: 'https://feeds.bbci.co.uk/news/world/africa/rss.xml' },
         ],
+        science: [
+            { name: 'NASA News', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
+            { name: 'ESA Space Science', url: 'https://www.esa.int/rssfeed/Our_Activities/Space_Science' },
+            { name: 'Space.com', url: 'https://www.space.com/feeds/all' },
+            { name: 'EarthSky', url: 'https://earthsky.org/feed' },
+            { name: 'Sky & Telescope', url: 'https://skyandtelescope.org/feed/' },
+            { name: 'ScienceAlert', url: 'https://www.sciencealert.com/feed' },
+            { name: 'ArXiv Astro-ph', url: 'https://export.arxiv.org/rss/astro-ph' },
+            { name: 'USGS Hazards', url: gn('site:usgs.gov (earthquake OR volcano OR landslide) when:2d') },
+            { name: 'Space Weather News', url: gn('("solar flare" OR "geomagnetic storm" OR "aurora borealis" OR asteroid) when:2d') },
+            { name: 'Rare Science', url: gn('("rare discovery" OR "never seen before" OR "scientists discover" OR "astronomers detect") when:3d') },
+        ],
         latam: [
             { name: 'BBC Latin America', url: 'https://feeds.bbci.co.uk/news/world/latin_america/rss.xml' },
         ],

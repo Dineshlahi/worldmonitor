@@ -735,6 +735,9 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         settings: resolve(__dirname, 'settings.html'),
         liveChannels: resolve(__dirname, 'live-channels.html'),
+        playgroundSettingsA: resolve(__dirname, 'playground-settings-A-sidebar.html'),
+        playgroundSettingsB: resolve(__dirname, 'playground-settings-B-accordion.html'),
+        playgroundSettingsC: resolve(__dirname, 'playground-settings-C-cards.html'),
       },
       output: {
         manualChunks(id) {
