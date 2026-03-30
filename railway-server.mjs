@@ -252,6 +252,20 @@ const VARIANT_FEEDS = {
             { name: 'ScienceDaily', url: 'https://www.sciencedaily.com/rss/all.xml' },
         ],
     },
+    science: {
+        science: [
+            { name: 'NASA News', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
+            { name: 'ESA Space Science', url: 'https://www.esa.int/rssfeed/Our_Activities/Space_Science' },
+            { name: 'Space.com', url: 'https://www.space.com/feeds/all' },
+            { name: 'EarthSky', url: 'https://earthsky.org/feed' },
+            { name: 'Sky & Telescope', url: 'https://skyandtelescope.org/feed/' },
+            { name: 'ScienceAlert', url: 'https://www.sciencealert.com/feed' },
+            { name: 'ArXiv Astro-ph', url: 'https://export.arxiv.org/rss/astro-ph' },
+            { name: 'USGS Hazards', url: gn('site:usgs.gov (earthquake OR volcano OR landslide) when:2d') },
+            { name: 'Space Weather News', url: gn('("solar flare" OR "geomagnetic storm" OR "aurora borealis" OR asteroid) when:2d') },
+            { name: 'Rare Science', url: gn('("rare discovery" OR "never seen before" OR "scientists discover" OR "astronomers detect") when:3d') },
+        ],
+    },
 };
 const INTEL_FEEDS = [
     { name: 'Defense One', url: 'https://www.defenseone.com/rss/all/' },
@@ -393,7 +407,7 @@ async function handleNewsDigest(req, res) {
     }
 
     const reqUrl = new URL(req.url, `http://localhost:${PORT}`);
-    const variant = ['full', 'tech', 'finance', 'happy'].includes(reqUrl.searchParams.get('variant') ?? '') ? reqUrl.searchParams.get('variant') : 'full';
+    const variant = ['full', 'tech', 'finance', 'happy', 'science'].includes(reqUrl.searchParams.get('variant') ?? '') ? reqUrl.searchParams.get('variant') : 'full';
     const lang = reqUrl.searchParams.get('lang') || 'en';
     const cacheKey = `${variant}:${lang}`;
 
